@@ -1,0 +1,14 @@
+{
+  "name": "esp32-radio-proxy",
+  "version": "1.0.0",
+  "description": "HLS-to-MP3 transcoding proxy for the ESP32-S3 web radio. Lets the ESP32 play HLS (.m3u8/.pls) stations that ESP32-audioI2S cannot decode directly.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}

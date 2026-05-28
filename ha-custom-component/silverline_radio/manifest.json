@@ -1,0 +1,10 @@
+{
+  "domain": "silverline_radio",
+  "name": "Silver Line Radio",
+  "documentation": "",
+  "dependencies": ["mqtt"],
+  "codeowners": [],
+  "requirements": [],
+  "version": "1.0.0",
+  "iot_class": "local_push"
+}

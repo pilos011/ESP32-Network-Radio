@@ -1,0 +1,55 @@
+{
+  "_comment": "Add stations here. 'source' may be a .pls / .m3u playlist (the proxy resolves it) or a direct .m3u8 / .aac / .mp3 URL (passed straight to ffmpeg). 'id' must be URL-safe (letters, digits, dash). The ESP32 reaches each station at http://PROXY_HOST:PORT/<id>",
+  "stations": [
+    {
+      "id": "cbsfm",
+      "name": "CBS Music FM",
+      "source": "http://serpent0.duckdns.org:8088/cbsfm.pls"
+    },
+    {
+      "id": "cbssfm",
+      "name": "CBS 표준 FM",
+      "source": "http://serpent0.duckdns.org:8088/cbssfm.pls"
+    },
+    {
+      "id": "sbsfm",
+      "name": "SBS 파워 FM",
+      "source": "http://serpent0.duckdns.org:8088/sbsfm.pls"
+    },
+    {
+      "id": "sbs2fm",
+      "name": "SBS 러브 FM",
+      "source": "http://serpent0.duckdns.org:8088/sbs2fm.pls"
+    },
+    {
+      "id": "mbcsfm",
+      "name": "MBC 표준 FM",
+      "source": "http://serpent0.duckdns.org:8088/mbcsfm.pls"
+    },
+    {
+      "id": "mbcfm",
+      "name": "MBC FM4U",
+      "source": "http://serpent0.duckdns.org:8088/mbcfm.pls"
+    },
+    {
+      "id": "kbs1radio",
+      "name": "KBS 제1라디오",
+      "source": "http://serpent0.duckdns.org:8088/kbs1radio.pls"
+    },
+    {
+      "id": "kbs2fm",
+      "name": "KBS 쿨FM",
+      "source": "http://serpent0.duckdns.org:8088/kbs2fm.pls"
+    },
+    {
+      "id": "kbsfm",
+      "name": "KBS 클래식FM",
+      "source": "http://serpent0.duckdns.org:8088/kbsfm.pls"
+    },
+    {
+      "id": "kbs2radio",
+      "name": "KBS 해피FM",
+      "source": "http://serpent0.duckdns.org:8088/kbs2radio.pls"
+    }
+  ]
+}
