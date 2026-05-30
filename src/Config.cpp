@@ -14,7 +14,7 @@ void Config::loadDefaults() {
   tzInfo     = TZ_INFO;
   radioProxy = RADIO_PROXY;
   stationFontSize  = 24;
-  maxVolume        = 11;
+  maxVolume        = 16;   // 8Ω 5W 병렬(4Ω) 스피커 — 여유 충분, 11→16
   directStreamBoost = 8;
   chimeMode         = 1;
   chimeVolume       = 9;
