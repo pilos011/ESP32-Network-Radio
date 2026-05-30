@@ -38,6 +38,7 @@ node server.js
 | 버전 | 주요 내용 | 다운로드 |
 |------|-----------|----------|
 | [v1.0.0](https://github.com/pilos011/ESP32-Network-Radio/releases/tag/v1.0.0) | 최초 안정 릴리즈, MQTT/HA 통합 완료 | [zip](https://github.com/pilos011/ESP32-Network-Radio/archive/refs/tags/v1.0.0.zip) |
+| [v1.1.0-beta](https://github.com/pilos011/ESP32-Network-Radio/releases/tag/v1.1.0-beta) ⚠️ | 8Ω 5W 듀얼 스피커 업그레이드 (하드웨어 교체 필요) | [zip](https://github.com/pilos011/ESP32-Network-Radio/archive/refs/tags/v1.1.0-beta.zip) |
 
 ## 하드웨어 (v1.0.0)
 
