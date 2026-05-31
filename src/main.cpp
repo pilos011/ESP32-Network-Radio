@@ -1234,8 +1234,13 @@ void loop() {
 
     // ---- SHORT (< 1 s) --------------------------------------------
     case ButtonControl::RIGHT_SHORT:
-      LOG("BTN", "RIGHT short -> vol +1");
-      if (systemOn) changeVolume(+1);
+      if (systemOn) {
+        LOG("BTN", "RIGHT short -> vol +1");
+        changeVolume(+1);
+      } else {
+        LOG("BTN", "RIGHT short (clock) -> radio ON");
+        powerOn();
+      }
       break;
 
     case ButtonControl::LEFT_SHORT:
@@ -1254,15 +1259,21 @@ void loop() {
       if (systemOn) switchStation(-1);
       break;
 
-    // ---- LONG (>= 2 s) : mode / AP change ------------------------
+    // ---- LONG (>= 2 s) : 라디오 모드에서만 시계 모드 전환 ------------
+    // 시계 모드에서 LONG은 아무것도 안 함 (오동작 방지)
+    // 시계 모드 → 라디오 ON은 RIGHT SHORT 사용
     case ButtonControl::RIGHT_LONG:
-      LOG("BTN", "RIGHT long (2s) -> %s", systemOn ? "clock mode" : "radio mode");
-      if (systemOn) powerOff(); else powerOn();
+      if (systemOn) {
+        LOG("BTN", "RIGHT long (2s) -> clock mode");
+        powerOff();
+      }
       break;
 
     case ButtonControl::LEFT_LONG:
-      LOG("BTN", "LEFT long (2s) -> %s", systemOn ? "clock mode" : "radio mode");
-      if (systemOn) powerOff(); else powerOn();
+      if (systemOn) {
+        LOG("BTN", "LEFT long (2s) -> clock mode");
+        powerOff();
+      }
       break;
 
     // ---- BOTH held 10 s -- universal AP fallback ------------------
