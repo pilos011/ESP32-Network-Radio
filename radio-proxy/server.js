@@ -35,10 +35,11 @@ function loadIni() {
 const INI = loadIni();
 const get = (envKey, iniKey, def) => process.env[envKey] ?? INI[iniKey] ?? def;
 
-const PORT    = parseInt(get('PORT',    'PORT',    '8088'), 10);
-const GAIN_DB = parseFloat(get('GAIN_DB', 'GAIN_DB', '6'));
-const LIMIT   = parseFloat(get('LIMIT',   'LIMIT',   '0.85'));
-const LOG_ON  = get('LOG_ENABLED', 'LOG_ENABLED', 'true').toLowerCase() !== 'false';
+const PORT      = parseInt(get('PORT',    'PORT',    '8088'), 10);
+const GAIN_DB   = parseFloat(get('GAIN_DB', 'GAIN_DB', '6'));
+const LIMIT     = parseFloat(get('LIMIT',   'LIMIT',   '0.85'));
+const NORMALIZE = get('NORMALIZE', 'NORMALIZE', 'false').toLowerCase() !== 'false';
+const LOG_ON    = get('LOG_ENABLED', 'LOG_ENABLED', 'true').toLowerCase() !== 'false';
 
 function log(msg) {
   if (!LOG_ON) return;
@@ -142,9 +143,10 @@ async function resolveSource(src, depth = 0) {
 }
 
 function spawnFfmpeg(inputUrl) {
+  const normFilter = NORMALIZE ? 'dynaudnorm=g=31:p=0.95,' : '';
   const af = GAIN_DB > 0
-    ? `volume=${GAIN_DB}dB,alimiter=limit=${LIMIT}:attack=5:release=50`
-    : `alimiter=limit=${LIMIT}:attack=5:release=50`;
+    ? `${normFilter}volume=${GAIN_DB}dB,alimiter=limit=${LIMIT}:attack=5:release=50`
+    : `${normFilter}alimiter=limit=${LIMIT}:attack=5:release=50`;
   return spawn(FFMPEG, [
     '-hide_banner', '-loglevel', 'warning',
     '-reconnect', '1', '-reconnect_streamed', '1',
@@ -295,7 +297,7 @@ process.on('SIGBREAK', () => shutdown('SIGBREAK'));
 
 // ── 서버 시작 ─────────────────────────────────────────────────────────────
 server.listen(PORT, () => {
-  log(`proxy  port=${PORT}  gain=${GAIN_DB}dB  limit=${LIMIT}  retries=${MAX_RETRIES}`);
+  log(`proxy  port=${PORT}  gain=${GAIN_DB}dB  limit=${LIMIT}  normalize=${NORMALIZE}  retries=${MAX_RETRIES}`);
   // 시작 시 잔여 ffmpeg 전체 정리
   if (IS_WIN) {
     killAllFfmpeg('startup cleanup');

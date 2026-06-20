@@ -974,10 +974,22 @@ void loop() {
       ESP.restart();
     }
   }
-  if (!g_diagMode && millis() > 86400000UL) {     // 24 h scheduled restart
-    Serial.println("[SYS] 24h scheduled restart");
-    delay(500);
-    ESP.restart();
+  // 자정(00:00) 정기 재부팅 — NTP 기준. 부팅 후 5분 이상 경과 조건으로 재시작 루프 방지.
+  // NTP 미동기 시 폴백: 24h 경과 후 재부팅.
+  if (!g_diagMode) {
+    struct tm tReboot;
+    bool haveNtp = getLocalTime(&tReboot, 0) && tReboot.tm_year >= (2024 - 1900);
+    if (haveNtp && millis() > 300000UL &&
+        tReboot.tm_hour == 0 && tReboot.tm_min == 0 && tReboot.tm_sec < 10) {
+      Serial.println("[SYS] midnight scheduled restart");
+      delay(500);
+      ESP.restart();
+    }
+    if (!haveNtp && millis() > 86400000UL) {
+      Serial.println("[SYS] 24h scheduled restart (no NTP)");
+      delay(500);
+      ESP.restart();
+    }
   }
 
   // ---- Setup-AP mode: tiny loop -- DNS + web UI only --------------
