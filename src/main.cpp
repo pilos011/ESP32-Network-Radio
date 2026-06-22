@@ -974,10 +974,22 @@ void loop() {
       ESP.restart();
     }
   }
-  if (!g_diagMode && millis() > 86400000UL) {     // 24 h scheduled restart
-    Serial.println("[SYS] 24h scheduled restart");
-    delay(500);
-    ESP.restart();
+  // 자정(00:00) 정기 재부팅 — NTP 기준. 부팅 후 5분 이상 경과 조건으로 재시작 루프 방지.
+  // NTP 미동기 시 폴백: 24h 경과 후 재부팅.
+  if (!g_diagMode) {
+    struct tm tReboot;
+    bool haveNtp = getLocalTime(&tReboot, 0) && tReboot.tm_year >= (2024 - 1900);
+    if (haveNtp && millis() > 300000UL &&
+        tReboot.tm_hour == 0 && tReboot.tm_min == 0 && tReboot.tm_sec < 10) {
+      Serial.println("[SYS] midnight scheduled restart");
+      delay(500);
+      ESP.restart();
+    }
+    if (!haveNtp && millis() > 86400000UL) {
+      Serial.println("[SYS] 24h scheduled restart (no NTP)");
+      delay(500);
+      ESP.restart();
+    }
   }
 
   // ---- Setup-AP mode: tiny loop -- DNS + web UI only --------------
@@ -1234,8 +1246,13 @@ void loop() {
 
     // ---- SHORT (< 1 s) --------------------------------------------
     case ButtonControl::RIGHT_SHORT:
-      LOG("BTN", "RIGHT short -> vol +1");
-      if (systemOn) changeVolume(+1);
+      if (systemOn) {
+        LOG("BTN", "RIGHT short -> vol +1");
+        changeVolume(+1);
+      } else {
+        LOG("BTN", "RIGHT short (clock) -> radio ON");
+        powerOn();
+      }
       break;
 
     case ButtonControl::LEFT_SHORT:
@@ -1254,15 +1271,21 @@ void loop() {
       if (systemOn) switchStation(-1);
       break;
 
-    // ---- LONG (>= 2 s) : mode / AP change ------------------------
+    // ---- LONG (>= 2 s) : 라디오 모드에서만 시계 모드 전환 ------------
+    // 시계 모드에서 LONG은 아무것도 안 함 (오동작 방지)
+    // 시계 모드 → 라디오 ON은 RIGHT SHORT 사용
     case ButtonControl::RIGHT_LONG:
-      LOG("BTN", "RIGHT long (2s) -> %s", systemOn ? "clock mode" : "radio mode");
-      if (systemOn) powerOff(); else powerOn();
+      if (systemOn) {
+        LOG("BTN", "RIGHT long (2s) -> clock mode");
+        powerOff();
+      }
       break;
 
     case ButtonControl::LEFT_LONG:
-      LOG("BTN", "LEFT long (2s) -> %s", systemOn ? "clock mode" : "radio mode");
-      if (systemOn) powerOff(); else powerOn();
+      if (systemOn) {
+        LOG("BTN", "LEFT long (2s) -> clock mode");
+        powerOff();
+      }
       break;
 
     // ---- BOTH held 10 s -- universal AP fallback ------------------
