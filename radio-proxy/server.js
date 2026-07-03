@@ -292,7 +292,7 @@ process.on('SIGBREAK', () => shutdown('SIGBREAK'));
 
 // ── 서버 시작 ─────────────────────────────────────────────────────────────
 server.listen(PORT, () => {
-  log(`proxy  port=${PORT}  gain=${GAIN_DB}dB  limit=${LIMIT}  retries=${MAX_RETRIES}`);
+  log(`proxy  port=${PORT}  gain=${GAIN_DB}dB  retries=${MAX_RETRIES}`);
   // 시작 시 잔여 ffmpeg 전체 정리
   if (IS_WIN) {
     killAllFfmpeg('startup cleanup');
