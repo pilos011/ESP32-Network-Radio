@@ -37,7 +37,6 @@ const get = (envKey, iniKey, def) => process.env[envKey] ?? INI[iniKey] ?? def;
 
 const PORT    = parseInt(get('PORT',    'PORT',    '8088'), 10);
 const GAIN_DB = parseFloat(get('GAIN_DB', 'GAIN_DB', '6'));
-const LIMIT   = parseFloat(get('LIMIT',   'LIMIT',   '0.85'));
 const LOG_ON  = get('LOG_ENABLED', 'LOG_ENABLED', 'true').toLowerCase() !== 'false';
 
 function log(msg) {
@@ -142,9 +141,7 @@ async function resolveSource(src, depth = 0) {
 }
 
 function spawnFfmpeg(inputUrl) {
-  const af = GAIN_DB > 0
-    ? `volume=${GAIN_DB}dB,alimiter=limit=${LIMIT}:attack=5:release=50`
-    : `alimiter=limit=${LIMIT}:attack=5:release=50`;
+  const af = `volume=${GAIN_DB}dB`;
   return spawn(FFMPEG, [
     '-hide_banner', '-loglevel', 'warning',
     '-reconnect', '1', '-reconnect_streamed', '1',
