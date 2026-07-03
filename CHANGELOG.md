@@ -15,8 +15,6 @@
 - 버튼: 시계 모드 RIGHT SHORT → 라디오 ON, RIGHT/LEFT LONG → 무반응
 
 ### Added
-- `radio-proxy`: ffmpeg `dynaudnorm` 음량 정규화 (`NORMALIZE=true`, config.ini 토글 가능)
-  - 방송국/프로그램 간 음량 급변 완화, 가우시안 창 31프레임
 - `main.cpp`: 자정(00:00) 정기 재부팅 (NTP 기준, 부팅 후 5분 이상 경과 조건)
   - NTP 미동기 시 기존 24h 경과 재부팅으로 폴백
 
